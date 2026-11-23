@@ -1,0 +1,235 @@
+{
+	"name": "JobTrail – Follow-up-Erinnerung",
+	"nodes": [
+		{
+			"parameters": {
+				"rule": {
+					"interval": [
+						{
+							"field": "days",
+							"daysInterval": 1,
+							"triggerAtHour": 8
+						}
+					]
+				}
+			},
+			"type": "n8n-nodes-base.scheduleTrigger",
+			"typeVersion": 1.2,
+			"position": [
+				0,
+				0
+			],
+			"id": "0b6f1c1e-2b02-4c1e-9a01-000000000001",
+			"name": "Jeden Morgen um 8"
+		},
+		{
+			"parameters": {},
+			"type": "n8n-nodes-base.manualTrigger",
+			"typeVersion": 1,
+			"position": [
+				0,
+				200
+			],
+			"id": "0b6f1c1e-2b02-4c1e-9a01-000000000008",
+			"name": "Manuell testen"
+		},
+		{
+			"parameters": {
+				"url": "http://app:8000/api/applications/follow-ups",
+				"sendHeaders": true,
+				"headerParameters": {
+					"parameters": [
+						{
+							"name": "Authorization",
+							"value": "=Bearer {{ $env.JOBTRAIL_API_TOKEN }}"
+						},
+						{
+							"name": "Accept",
+							"value": "application/json"
+						}
+					]
+				},
+				"options": {}
+			},
+			"type": "n8n-nodes-base.httpRequest",
+			"typeVersion": 4.2,
+			"position": [
+				220,
+				0
+			],
+			"id": "0b6f1c1e-2b02-4c1e-9a01-000000000002",
+			"name": "JobTrail-API: fällige Follow-ups"
+		},
+		{
+			"parameters": {
+				"fieldToSplitOut": "data",
+				"options": {}
+			},
+			"type": "n8n-nodes-base.splitOut",
+			"typeVersion": 1,
+			"position": [
+				440,
+				0
+			],
+			"id": "0b6f1c1e-2b02-4c1e-9a01-000000000003",
+			"name": "Einzeln aufteilen"
+		},
+		{
+			"parameters": {
+				"jsCode": "const lines = [];\n\nfor (const item of $input.all()) {\n\tconst application = item.json;\n\tconst date_parts = application.applied_at.split('-');\n\tconst days = Math.floor((Date.now() - Date.parse(application.applied_at)) / 86400000);\n\n\tlines.push(\n\t\t'• ' + application.company + ' – ' + application.position + '\\n'\n\t\t+ '   beworben am ' + date_parts[2] + '.' + date_parts[1] + '.' + date_parts[0] + ' (vor ' + days + ' Tagen)\\n'\n\t\t+ '   ' + application.edit_url\n\t);\n}\n\nconst title = lines.length == 1\n\t? '🔔 Bei dieser Bewerbung solltest du nachhaken:'\n\t: '🔔 Bei diesen ' + lines.length + ' Bewerbungen solltest du nachhaken:';\n\nreturn [\n\t{\n\t\tjson: {\n\t\t\ttext: title + '\\n\\n' + lines.join('\\n\\n'),\n\t\t},\n\t},\n];\n"
+			},
+			"type": "n8n-nodes-base.code",
+			"typeVersion": 2,
+			"position": [
+				660,
+				0
+			],
+			"id": "0b6f1c1e-2b02-4c1e-9a01-000000000004",
+			"name": "Nachricht formulieren"
+		},
+		{
+			"parameters": {
+				"method": "POST",
+				"url": "=https://api.telegram.org/bot{{ $env.TELEGRAM_BOT_TOKEN }}/sendMessage",
+				"sendBody": true,
+				"specifyBody": "json",
+				"jsonBody": "={{ JSON.stringify({ chat_id: $env.TELEGRAM_CHAT_ID, text: $json.text, disable_web_page_preview: true }) }}",
+				"options": {}
+			},
+			"type": "n8n-nodes-base.httpRequest",
+			"typeVersion": 4.2,
+			"position": [
+				880,
+				0
+			],
+			"id": "0b6f1c1e-2b02-4c1e-9a01-000000000005",
+			"name": "Telegram: Erinnerung senden"
+		},
+		{
+			"parameters": {
+				"jsCode": "return $('Einzeln aufteilen').all();\n"
+			},
+			"type": "n8n-nodes-base.code",
+			"typeVersion": 2,
+			"position": [
+				1100,
+				0
+			],
+			"id": "0b6f1c1e-2b02-4c1e-9a01-000000000006",
+			"name": "Bewerbungen wieder auflisten"
+		},
+		{
+			"parameters": {
+				"method": "POST",
+				"url": "=http://app:8000/api/applications/{{ $json.id }}/reminded",
+				"sendHeaders": true,
+				"headerParameters": {
+					"parameters": [
+						{
+							"name": "Authorization",
+							"value": "=Bearer {{ $env.JOBTRAIL_API_TOKEN }}"
+						},
+						{
+							"name": "Accept",
+							"value": "application/json"
+						}
+					]
+				},
+				"options": {}
+			},
+			"type": "n8n-nodes-base.httpRequest",
+			"typeVersion": 4.2,
+			"position": [
+				1320,
+				0
+			],
+			"id": "0b6f1c1e-2b02-4c1e-9a01-000000000007",
+			"name": "JobTrail-API: als erinnert markieren"
+		}
+	],
+	"connections": {
+		"Jeden Morgen um 8": {
+			"main": [
+				[
+					{
+						"node": "JobTrail-API: fällige Follow-ups",
+						"type": "main",
+						"index": 0
+					}
+				]
+			]
+		},
+		"JobTrail-API: fällige Follow-ups": {
+			"main": [
+				[
+					{
+						"node": "Einzeln aufteilen",
+						"type": "main",
+						"index": 0
+					}
+				]
+			]
+		},
+		"Einzeln aufteilen": {
+			"main": [
+				[
+					{
+						"node": "Nachricht formulieren",
+						"type": "main",
+						"index": 0
+					}
+				]
+			]
+		},
+		"Nachricht formulieren": {
+			"main": [
+				[
+					{
+						"node": "Telegram: Erinnerung senden",
+						"type": "main",
+						"index": 0
+					}
+				]
+			]
+		},
+		"Telegram: Erinnerung senden": {
+			"main": [
+				[
+					{
+						"node": "Bewerbungen wieder auflisten",
+						"type": "main",
+						"index": 0
+					}
+				]
+			]
+		},
+		"Bewerbungen wieder auflisten": {
+			"main": [
+				[
+					{
+						"node": "JobTrail-API: als erinnert markieren",
+						"type": "main",
+						"index": 0
+					}
+				]
+			]
+		},
+		"Manuell testen": {
+			"main": [
+				[
+					{
+						"node": "JobTrail-API: fällige Follow-ups",
+						"type": "main",
+						"index": 0
+					}
+				]
+			]
+		}
+	},
+	"active": false,
+	"settings": {
+		"executionOrder": "v1"
+	},
+	"id": "JobTrailFollowUp",
+	"tags": []
+}
