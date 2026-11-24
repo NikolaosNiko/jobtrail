@@ -102,5 +102,6 @@ class JobApplicationController extends Controller
 		$application->setStatus($request->enum('status', ApplicationStatus::class));
 		$application->setAppliedAt($request->input('applied_at'));
 		$application->setNotes($request->input('notes'));
+		$application->fillMissingAppliedAt();
 	}
 }

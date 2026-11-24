@@ -30,7 +30,7 @@
 							<span class="rounded bg-green-100 px-1.5 text-green-700">Remote</span>
 						@endif
 						@if ($application->getSalaryMin())
-							<span>{{ number_format($application->getSalaryMin() / 1000) }}–{{ number_format($application->getSalaryMax() / 1000) }}k €</span>
+							<span>{{ number_format($application->getSalaryMin() / 1000) }}{{ $application->getSalaryMax() ? '–' . number_format($application->getSalaryMax() / 1000) : '' }}k €</span>
 						@endif
 					</p>
 				</article>

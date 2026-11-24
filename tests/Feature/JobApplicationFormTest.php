@@ -107,3 +107,18 @@ it('deletes an application', function () {
 
 	expect(JobApplication::count())->toBe(0);
 });
+
+it('sets the applied date when stored as applied without a date', function () {
+	$this->post(route('applications.store'), validApplication(['status' => ApplicationStatus::Applied->value]));
+
+	expect(JobApplication::sole()->getAppliedAt()->isToday())->toBeTrue();
+});
+
+it('keeps an entered applied date', function () {
+	$this->post(route('applications.store'), validApplication([
+		'status' => ApplicationStatus::Applied->value,
+		'applied_at' => '2026-11-01',
+	]));
+
+	expect(JobApplication::sole()->getAppliedAt()->toDateString())->toBe('2026-11-01');
+});

@@ -147,7 +147,7 @@ Alle Aufrufe mit `Authorization: Bearer <token>` und `Accept: application/json`.
 
 ## Qualitätssicherung
 
-- **29 Pest-Tests** (Feature + Unit): Board, Formular inkl. Grenzfälle der Validierung, API inkl. Authentifizierung und Duplikaten, Token-Befehl, Status-Enum
+- **32 Pest-Tests** (Feature + Unit): Board, Formular inkl. Grenzfälle der Validierung, API inkl. Authentifizierung und Duplikaten, Token-Befehl, Status-Enum
 - **GitHub Actions** führt die Tests bei jedem Push aus
 - **Manuelle End-to-End-Tests** der Workflows mit echten Stellenanzeigen und Fehlerfällen (404, nicht erreichbar, Übersichtsseite, doppelter Link)
 - **Code-Review** jedes Diffs durch mich, Konventionen in `CLAUDE.md`

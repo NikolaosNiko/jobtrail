@@ -35,3 +35,14 @@ it('sets the applied date when moved to applied', function () {
 
 	expect($application->fresh()->getAppliedAt())->not->toBeNull();
 });
+
+it('shows only the minimum salary when no maximum is set', function () {
+	JobApplication::factory()->create([
+		JobApplication::$fields['salaryMin'] => 45000,
+		JobApplication::$fields['salaryMax'] => null,
+	]);
+
+	Livewire::test(Board::class)
+		->assertSee('45k €')
+		->assertDontSee('45–0k €');
+});

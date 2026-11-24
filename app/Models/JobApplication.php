@@ -54,12 +54,20 @@ class JobApplication extends Model
 	public function moveTo(ApplicationStatus $status): void
 	{
 		$this->setStatus($status);
+		$this->fillMissingAppliedAt();
+		$this->save();
+	}
 
-		if ($status == ApplicationStatus::Applied && $this->getAppliedAt() == null) {
+	/**
+	 * Setzt fehlendes Bewerbungsdatum.
+	 *
+	 * @return void
+	 */
+	public function fillMissingAppliedAt(): void
+	{
+		if ($this->getStatus() == ApplicationStatus::Applied && $this->getAppliedAt() == null) {
 			$this->setAppliedAt(Carbon::now());
 		}
-
-		$this->save();
 	}
 
 	/**
@@ -355,5 +363,15 @@ class JobApplication extends Model
 	public function setNotes(?string $notes): void
 	{
 		$this->setAttribute(self::$fields['notes'], $notes);
+	}
+
+	/**
+	 * Liefert das Erstellungsdatum.
+	 *
+	 * @return Carbon|null
+	 */
+	public function getCreatedAt(): ?Carbon
+	{
+		return $this->getAttribute(self::$fields['createdAt']);
 	}
 }
