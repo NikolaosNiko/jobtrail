@@ -1,10 +1,14 @@
 # JobTrail
 
-![Tests](https://github.com/DEIN-GITHUB-NAME/jobtrail/actions/workflows/tests.yml/badge.svg)
+![Tests](https://github.com/NikolaosNiko/jobtrail/actions/workflows/tests.yml/badge.svg)
 
 Ein Bewerbungs-Tracker mit Kanban-Board – gebaut mit dem TALL-Stack und automatisiert mit n8n.
 
-> Screenshot / GIF hier einfügen
+![Kanban-Board](docs/screenshots/board.png)
+
+| Formular | Telegram |
+|---|---|
+| ![Formular](docs/screenshots/formular.png) | ![Telegram](docs/screenshots/telegram.png) |
 
 ## Features
 
@@ -12,8 +16,6 @@ Ein Bewerbungs-Tracker mit Kanban-Board – gebaut mit dem TALL-Stack und automa
 - [x] Status-Workflow: Gemerkt → Beworben → Gespräch → Angebot / Absage
 - [x] Bewerbungsdatum wird beim Wechsel auf „Beworben“ automatisch gesetzt
 - [x] Bewerbungen anlegen, bearbeiten und löschen (Formular + Validierung)
-- [ ] Notizen und Termine pro Bewerbung
-- [ ] Dashboard: Anzahl, Antwortquote, Gehaltsschnitt
 - [x] REST-API mit Laravel Sanctum (für n8n)
 - [x] n8n + Telegram: Link zur Stellenanzeige schicken → KI liest sie aus → Bewerbung wird angelegt
 - [x] n8n: Erinnerung, wenn sich 14 Tage nichts tut
@@ -34,7 +36,7 @@ Ein Bewerbungs-Tracker mit Kanban-Board – gebaut mit dem TALL-Stack und automa
 Voraussetzung: Docker Desktop.
 
 ```bash
-git clone https://github.com/DEIN-GITHUB-NAME/jobtrail.git
+git clone https://github.com/NikolaosNiko/jobtrail.git
 cd jobtrail
 cp .env.example .env
 docker compose up -d --build

@@ -12,15 +12,24 @@ class DatabaseSeeder extends Seeder
 {
 	use WithoutModelEvents;
 
+	/**
+	 * Legt Beispieldaten an.
+	 *
+	 * @return void
+	 */
 	public function run(): void
 	{
-		User::factory()->create([
-			'name' => 'Test User',
-			'email' => 'test@example.com',
-		]);
+		$user = new User();
+		$user->setName('Test User');
+		$user->setEmail('test@example.com');
+		$user->setPassword('password');
+		$user->save();
 
 		foreach (ApplicationStatus::cases() as $status) {
-			JobApplication::factory()->count(3)->status($status)->create();
+			JobApplication::factory()
+				->count(3)
+				->status($status)
+				->create();
 		}
 	}
 }
