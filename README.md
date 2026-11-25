@@ -60,7 +60,7 @@ Den Code hat Claude Code geschrieben, ich habe vorgegeben, was gebaut wird und w
 
 Die Schritte im Überblick:
 
-**Grundgerüst (22.11.):** Laravel, Livewire, Pest, Docker und GitHub Actions eingerichtet, dazu das Board. Mein lokales PHP war zu alt, deshalb läuft alles in Docker. So startet das Projekt bei jedem gleich.
+**Grundgerüst (22.11.):** Laravel, Livewire, Pest, Docker und GitHub Actions eingerichtet, dazu das Board. Alles läuft in Docker, damit das Projekt bei jedem gleich startet und man lokal weder PHP noch MySQL installieren muss.
 
 **Formular (22.11.):** Anlegen, Bearbeiten und Löschen mit Validierung. Ein Test hat gezeigt, dass „Gehalt bis“ ohne „Gehalt von“ abgelehnt wurde, das wurde korrigiert. Beim Review ist mir aufgefallen, dass das Formular bei „Beworben“ kein Datum gesetzt hat und dadurch nie eine Erinnerung kam. Board und Formular nutzen jetzt dieselbe Methode im Model.
 
