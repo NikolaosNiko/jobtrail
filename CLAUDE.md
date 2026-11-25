@@ -6,7 +6,7 @@ Befehle immer mit `docker compose exec app …` ausführen (z. B. `docker compos
 ## Architektur
 
 - Livewire nur für wirklich interaktive Seiten (Kanban-Board). Formulare = Controller + Blade + Form Request.
-- n8n ist ein eigener Dienst und spricht nur über HTTP (REST-API / Webhooks) mit Laravel.
+- n8n ist ein eigener Dienst und spricht nur über die REST-API mit Laravel.
 
 ## Code-Stil
 
