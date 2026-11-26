@@ -12,7 +12,7 @@ use App\Models\JobApplication;
 function validApplication(array $overrides = []): array
 {
 	return array_merge([
-		'company' => 'InnoGE',
+		'company' => 'Musterfirma GmbH',
 		'position' => 'Laravel Entwickler',
 		'url' => 'https://example.com/job',
 		'location' => 'Fulda',
@@ -36,7 +36,7 @@ it('stores a new application', function () {
 
 	$application = JobApplication::sole();
 
-	expect($application->getCompanyName())->toBe('InnoGE')
+	expect($application->getCompanyName())->toBe('Musterfirma GmbH')
 		->and($application->getIsRemote())->toBeTrue()
 		->and($application->getSalaryMin())->toBe(48000)
 		->and($application->getStatus())->toBe(ApplicationStatus::Saved);
@@ -95,7 +95,7 @@ it('updates an application', function () {
 
 	$application = $application->fresh();
 
-	expect($application->getCompanyName())->toBe('InnoGE')
+	expect($application->getCompanyName())->toBe('Musterfirma GmbH')
 		->and($application->getStatus())->toBe(ApplicationStatus::Interview);
 });
 

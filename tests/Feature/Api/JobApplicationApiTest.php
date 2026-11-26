@@ -15,9 +15,9 @@ use Laravel\Sanctum\Sanctum;
 function validApiApplication(array $overrides = []): array
 {
 	return array_merge([
-		'company' => 'InnoGE',
+		'company' => 'Musterfirma GmbH',
 		'position' => 'Laravel Entwickler',
-		'url' => 'https://karriere.innoge.de/laravel-entwickler',
+		'url' => 'https://example.com/jobs/laravel-entwickler',
 		'location' => 'Fulda',
 		'remote' => true,
 		'salary_min' => 48000,
@@ -39,7 +39,7 @@ it('rejects requests without a token', function () {
 it('stores a job as saved', function () {
 	$this->postJson(route('api.applications.store'), validApiApplication())
 		->assertCreated()
-		->assertJsonPath('data.company', 'InnoGE')
+		->assertJsonPath('data.company', 'Musterfirma GmbH')
 		->assertJsonPath('data.status', ApplicationStatus::Saved->value);
 
 	expect(JobApplication::sole()->getStatus())->toBe(ApplicationStatus::Saved);
@@ -50,7 +50,7 @@ it('returns the existing application for a known url', function () {
 
 	$this->postJson(route('api.applications.store'), validApiApplication(['company' => 'Andere Firma']))
 		->assertOk()
-		->assertJsonPath('data.company', 'InnoGE');
+		->assertJsonPath('data.company', 'Musterfirma GmbH');
 
 	expect(JobApplication::count())->toBe(1);
 });
